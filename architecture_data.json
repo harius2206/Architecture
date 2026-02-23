@@ -33,20 +33,13 @@
     ],
     "buildings": [
         {
-            "id": 1,
-            "title": "The Shard",
-            "address": "London",
-            "architect_id": 2,
-            "area": 110000.0,
-            "description": "sssss",
-            "note": ""
-        },
-        {
             "id": 3,
             "title": "Gherkin",
             "address": "London",
             "architect_id": 4,
-            "area": 47000.0
+            "area": 47000.0,
+            "description": "",
+            "note": ""
         },
         {
             "id": 4,

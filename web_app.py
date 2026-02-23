@@ -1,8 +1,10 @@
-from flask import Flask, render_template, abort, request, redirect, url_for
+from flask import Flask, render_template, abort, request, redirect, url_for, flash
 from infrastructure import DataObjectsCreator
 from models import BuildingBrowsingModel, BuildingEditingModel
 
 app = Flask(__name__)
+# Секретний ключ необхідний для роботи flash повідомлень (аналог TempData)
+app.secret_key = 'super_secret_key_for_architecture_app'
 
 
 @app.route('/')
@@ -39,7 +41,7 @@ def _descriptive_info(id):
     return render_template('shared/_descriptive_info.html', lines=description_lines)
 
 
-# --- CRUD Контролер для будівель (Завдання 2-6) ---
+# --- CRUD Контролер для будівель ---
 
 @app.route('/buildings_crud/')
 def buildings_index():
@@ -47,7 +49,6 @@ def buildings_index():
     buildings = uow.buildings_repository.get_all()
     architects = uow.architects_repository.get_all()
 
-    # Словник для швидкого пошуку імені архітектора за ID
     arch_dict = {a.id: a.name for a in architects}
 
     browsing_models = [
@@ -60,23 +61,41 @@ def buildings_index():
 @app.route('/buildings_crud/create', methods=['GET', 'POST'])
 def buildings_create():
     uow = DataObjectsCreator.get_unit_of_work()
+    architects = uow.architects_repository.get_all()
 
     if request.method == 'POST':
+        # Безпечне зчитування числових значень
+        try:
+            area_val = float(request.form.get('area', 0.0))
+        except ValueError:
+            area_val = 0.0
+
+        arch_id_str = request.form.get('architect_id')
+        arch_id_val = int(arch_id_str) if arch_id_str and arch_id_str.isdigit() else None
+
         model = BuildingEditingModel(
-            title=request.form.get('title'),
-            address=request.form.get('address'),
-            architect_id=int(request.form.get('architect_id')),
-            area=float(request.form.get('area', 0.0)),
-            description=request.form.get('description', ''),
-            note=request.form.get('note', '')
+            title=request.form.get('title', '').strip(),
+            address=request.form.get('address', '').strip(),
+            architect_id=arch_id_val,
+            area=area_val,
+            description=request.form.get('description', '').strip(),
+            note=request.form.get('note', '').strip()
         )
+
+        # Аналог !ModelState.IsValid
+        errors = model.validate()
+        if errors:
+            return render_template('buildings_crud/create.html', model=model, architects=architects, errors=errors)
+
         uow.buildings_repository.add(model.to_entity())
         uow.save()
+
+        # Аналог TempData["message"]
+        flash(f'Дані будівлі "{model.title}" додано успішно!', 'success')
         return redirect(url_for('buildings_index'))
 
     model = BuildingEditingModel()
-    architects = uow.architects_repository.get_all()
-    return render_template('buildings_crud/create.html', model=model, architects=architects)
+    return render_template('buildings_crud/create.html', model=model, architects=architects, errors={})
 
 
 @app.route('/buildings_crud/edit/<int:id>', methods=['GET', 'POST'])
@@ -86,23 +105,40 @@ def buildings_edit(id):
     if not building:
         abort(404)
 
+    architects = uow.architects_repository.get_all()
+
     if request.method == 'POST':
+        try:
+            area_val = float(request.form.get('area', 0.0))
+        except ValueError:
+            area_val = 0.0
+
+        arch_id_str = request.form.get('architect_id')
+        arch_id_val = int(arch_id_str) if arch_id_str and arch_id_str.isdigit() else None
+
         model = BuildingEditingModel(
             id=id,
-            title=request.form.get('title'),
-            address=request.form.get('address'),
-            architect_id=int(request.form.get('architect_id')),
-            area=float(request.form.get('area', 0.0)),
-            description=request.form.get('description', ''),
-            note=request.form.get('note', '')
+            title=request.form.get('title', '').strip(),
+            address=request.form.get('address', '').strip(),
+            architect_id=arch_id_val,
+            area=area_val,
+            description=request.form.get('description', '').strip(),
+            note=request.form.get('note', '').strip()
         )
+
+        # Перевірка на помилки
+        errors = model.validate()
+        if errors:
+            return render_template('buildings_crud/edit.html', model=model, architects=architects, errors=errors)
+
         uow.buildings_repository.update(model.to_entity())
         uow.save()
+
+        flash(f'Зміни даних будівлі "{model.title}" збережено', 'success')
         return redirect(url_for('buildings_index'))
 
     model = BuildingEditingModel.from_entity(building)
-    architects = uow.architects_repository.get_all()
-    return render_template('buildings_crud/edit.html', model=model, architects=architects)
+    return render_template('buildings_crud/edit.html', model=model, architects=architects, errors={})
 
 
 @app.route('/buildings_crud/delete/<int:id>', methods=['GET', 'POST'])
@@ -115,6 +151,7 @@ def buildings_delete(id):
     if request.method == 'POST':
         uow.buildings_repository.delete(id)
         uow.save()
+        flash('Будівлю успішно видалено!', 'success')
         return redirect(url_for('buildings_index'))
 
     model = BuildingEditingModel.from_entity(building)
