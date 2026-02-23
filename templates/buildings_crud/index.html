@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Список будівель</h2>
+<p>
+    <a href="{{ url_for('buildings_create') }}" class="btn btn-primary">Створити нову будівлю</a>
+</p>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Назва</th>
+            <th>Архітектор</th>
+            <th>Площа (кв. м)</th>
+            <th>Дії</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for m in models %}
+        <tr>
+            <td>{{ m.title }}</td>
+            <td>{{ m.architect_name }}</td>
+            <td>{{ m.area }}</td>
+            <td>
+                <a href="{{ url_for('buildings_edit', id=m.id) }}">Редагувати</a> |
+                <a href="{{ url_for('buildings_details', id=m.id) }}">Деталі</a> |
+                <a href="{{ url_for('buildings_delete', id=m.id) }}">Видалити</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -15,7 +15,13 @@ class IBuildingsRepository(ABC):
     @abstractmethod
     def get_all(self) -> List: pass
     @abstractmethod
+    def get_by_id(self, id: int): pass
+    @abstractmethod
     def add(self, item): pass
+    @abstractmethod
+    def update(self, item): pass
+    @abstractmethod
+    def delete(self, id: int): pass
 
 class IUnitOfWork(ABC):
     @property

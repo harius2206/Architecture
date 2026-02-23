@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Видалити будівлю</h2>
+<div class="alert alert-danger">
+    Ви впевнені, що хочете видалити будівлю <strong>{{ model.title }}</strong>?
+</div>
+<form action="{{ url_for('buildings_delete', id=model.id) }}" method="post">
+    <button type="submit" class="btn btn-danger">Видалити</button>
+    <a href="{{ url_for('buildings_index') }}" class="btn btn-secondary">Скасувати</a>
+</form>
+{% endblock %}

@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block content %}
+<h2>Створити будівлю</h2>
+<form action="{{ url_for('buildings_create') }}" method="post">
+    <div class="mb-3">
+        <label for="title" class="form-label">Назва</label>
+        <input type="text" class="form-control" id="title" name="title" value="{{ model.title }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="address" class="form-label">Адреса</label>
+        <input type="text" class="form-control" id="address" name="address" value="{{ model.address }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="architect_id" class="form-label">Архітектор</label>
+        <select class="form-select" id="architect_id" name="architect_id" required>
+            <option value="">-- Виберіть архітектора --</option>
+            {% for arch in architects %}
+                <option value="{{ arch.id }}">{{ arch.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="area" class="form-label">Площа (кв. м)</label>
+        <input type="number" step="0.1" class="form-control" id="area" name="area" value="{{ model.area }}" required>
+    </div>
+    <div class="mb-3">
+        <label for="description" class="form-label">Опис</label>
+        <textarea class="form-control" id="description" name="description" rows="3">{{ model.description }}</textarea>
+    </div>
+    <div class="mb-3">
+        <label for="note" class="form-label">Примітка</label>
+        <textarea class="form-control" id="note" name="note" rows="2">{{ model.note }}</textarea>
+    </div>
+    <button type="submit" class="btn btn-success">Зберегти</button>
+    <a href="{{ url_for('buildings_index') }}" class="btn btn-secondary">Скасувати</a>
+</form>
+{% endblock %}
