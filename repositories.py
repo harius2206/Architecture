@@ -20,6 +20,7 @@ class ArchitectsRepository(IArchitectsRepository):
     def delete(self, id: int):
         self._collection[:] = [a for a in self._collection if a['id'] != id]
 
+
 class BuildingsRepository(IBuildingsRepository):
     def __init__(self, collection: list):
         self._collection = collection
@@ -27,10 +28,24 @@ class BuildingsRepository(IBuildingsRepository):
     def get_all(self):
         return [Building(**b) for b in self._collection]
 
+    def get_by_id(self, id: int):
+        data = next((b for b in self._collection if b['id'] == id), None)
+        return Building(**data) if data else None
+
     def add(self, item: Building):
         new_id = max([b['id'] for b in self._collection], default=0) + 1
         item.id = new_id
         self._collection.append(item.__dict__)
+
+    def update(self, item: Building):
+        for i, b in enumerate(self._collection):
+            if b['id'] == item.id:
+                self._collection[i] = item.__dict__
+                break
+
+    def delete(self, id: int):
+        self._collection[:] = [b for b in self._collection if b['id'] != id]
+
 
 class FileUnitOfWork(IUnitOfWork):
     def __init__(self, data_context):
