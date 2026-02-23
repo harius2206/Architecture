@@ -8,7 +8,7 @@ class DataObjectsCreator:
     @classmethod
     def get_unit_of_work(cls):
         if cls._unit_of_work is None:
-            # Ініціалізація контексту, як у main.py
+            # Створюємо контекст та завантажуємо дані
             cls._data_context = SimpleDataContext()
             if cls._data_context.is_empty():
                 cls._data_context.create_testing_data()
