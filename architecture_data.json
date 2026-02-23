@@ -1,0 +1,47 @@
+{
+    "architects": [
+        {
+            "id": 1,
+            "name": "Zaha Hadid",
+            "license_id": "UK-001"
+        },
+        {
+            "id": 2,
+            "name": "Renzo Piano",
+            "license_id": "IT-099"
+        },
+        {
+            "id": 3,
+            "name": "Norman Foster",
+            "license_id": "UK-777"
+        },
+        {
+            "id": 4,
+            "name": "Norman Foster",
+            "license_id": "UK-777"
+        }
+    ],
+    "buildings": [
+        {
+            "id": 1,
+            "title": "The Shard",
+            "address": "London",
+            "architect_id": 2,
+            "area": 110000.0
+        },
+        {
+            "id": 2,
+            "title": "Gherkin",
+            "address": "London",
+            "architect_id": 3,
+            "area": 47000.0
+        },
+        {
+            "id": 3,
+            "title": "Gherkin",
+            "address": "London",
+            "architect_id": 4,
+            "area": 47000.0
+        }
+    ]
+}
