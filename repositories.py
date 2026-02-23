@@ -35,14 +35,17 @@ class BuildingsRepository(IBuildingsRepository):
 class FileUnitOfWork(IUnitOfWork):
     def __init__(self, data_context):
         self._data_context = data_context
+        # Ініціалізуємо репозиторії
         self._architects_repo = ArchitectsRepository(data_context.architects)
         self._buildings_repo = BuildingsRepository(data_context.buildings)
 
     @property
-    def architects_repository(self): return self._architects_repo
+    def architects_repository(self):
+        return self._architects_repo
 
     @property
-    def buildings_repository(self): return self._buildings_repo
+    def buildings_repository(self):
+        return self._buildings_repo
 
     def save(self):
         self._data_context.save()

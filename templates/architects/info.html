@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h2>Список архітекторів</h2>
+    {% for arch in objects %}
+    <div class="card mb-3">
+        <div class="card-body">
+            <h3><strong>{{ arch.name }}</strong></h3>
+            <p class="lead">ID: {{ arch.id }}</p>
+            <p class="lead">Ліцензія: {{ arch.license_id }}</p>
+
+            <div id="desc-{{ arch.id }}">
+                {% include 'shared/_descriptive_block.html' with context %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% endblock %}

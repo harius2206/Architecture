@@ -8,6 +8,7 @@ def study_uow():
     print("--- StudyUOW Architecture Project ---")
 
     context = SimpleDataContext()
+    # Саме тут виникала помилка через відсутність методу в data_context.py
     if context.is_empty():
         print("Контекст порожній, створюємо тестові дані...")
         context.create_testing_data()

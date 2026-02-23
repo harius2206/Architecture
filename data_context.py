@@ -19,6 +19,7 @@ class SimpleDataContext:
             ]
 
     def is_empty(self):
+        """Перевіряє, чи порожні списки даних"""
         return len(self.architects) == 0 and len(self.buildings) == 0
 
     def save(self):

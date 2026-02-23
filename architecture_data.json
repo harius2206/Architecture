@@ -19,6 +19,11 @@
             "id": 4,
             "name": "Norman Foster",
             "license_id": "UK-777"
+        },
+        {
+            "id": 5,
+            "name": "Norman Foster",
+            "license_id": "UK-777"
         }
     ],
     "buildings": [
@@ -42,6 +47,15 @@
             "address": "London",
             "architect_id": 4,
             "area": 47000.0
+        },
+        {
+            "id": 4,
+            "title": "Gherkin",
+            "address": "London",
+            "architect_id": 5,
+            "area": 47000.0,
+            "description": "",
+            "note": ""
         }
     ]
 }
